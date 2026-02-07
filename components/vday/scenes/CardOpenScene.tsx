@@ -9,19 +9,18 @@ interface CardOpenSceneProps {
 
 export function CardOpenScene({ onComplete }: CardOpenSceneProps) {
   const [isOpening, setIsOpening] = useState(false);
-  const flapRef = useRef<HTMLDivElement>(null);
+  const flapPanelRef = useRef<HTMLDivElement>(null);
   const letterRef = useRef<HTMLDivElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
-    const handleClick = () => {
+  const handleClick = () => {
     if (isOpening) return;
     setIsOpening(true);
-    if (flapRef.current) {
-      gsap.set(flapRef.current, {
+
+    if (flapPanelRef.current) {
+      gsap.set(flapPanelRef.current, {
         rotationX: 0,
         y: 0,
-        yPercent: 0,
-        z: 0,
         transformOrigin: "50% 0%",
         transformPerspective: 850,
         force3D: true,
@@ -34,28 +33,34 @@ export function CardOpenScene({ onComplete }: CardOpenSceneProps) {
       },
     });
 
-    // 1. Flap inverts on its hinge (front face -> back face)
-    tl.to(flapRef.current, {
-      rotationX: 180,
+    // 1. True hinge inversion: flap rotates over to show its back face.
+    tl.to(flapPanelRef.current, {
+      rotationX: -180,
       y: 0,
-      yPercent: 0,
-      z: 0,
-      duration: 0.85,
+      duration: 0.9,
       ease: "power2.inOut",
       force3D: true,
     })
-    // 2. Letter slides UP OUT of envelope and comes in front
-    .to(letterRef.current, {
-      y: "-80%",
-      zIndex: 10,
-      duration: 1.4,
-      ease: "power3.out",
-    }, "+=0.2")
-    // 3. Fade everything out
-    .to(wrapperRef.current, {
-      opacity: 0,
-      duration: 1,
-    }, "+=1");
+      // 2. Letter slides out only after flap fully opens.
+      .to(
+        letterRef.current,
+        {
+          y: "-80%",
+          zIndex: 10,
+          duration: 1.4,
+          ease: "power3.out",
+        },
+        "+=0.2"
+      )
+      // 3. Fade scene out.
+      .to(
+        wrapperRef.current,
+        {
+          opacity: 0,
+          duration: 1,
+        },
+        "+=1"
+      );
   };
 
   return (
@@ -67,9 +72,11 @@ export function CardOpenScene({ onComplete }: CardOpenSceneProps) {
       aria-label="Open envelope"
       onClick={handleClick}
     >
-      <div ref={wrapperRef} className="relative pointer-events-none" style={{ width: "80vmin", height: "50vmin", perspective: "850px", transformStyle: "preserve-3d" }}>
-
-        {/* Click to open label */}
+      <div
+        ref={wrapperRef}
+        className="relative pointer-events-none"
+        style={{ width: "80vmin", height: "50vmin", perspective: "850px", transformStyle: "preserve-3d" }}
+      >
         {!isOpening && (
           <p
             className="absolute -bottom-16 left-0 right-0 text-center animate-pulse"
@@ -79,7 +86,6 @@ export function CardOpenScene({ onComplete }: CardOpenSceneProps) {
           </p>
         )}
 
-        {/* The letter inside - starts hidden under flap */}
         <div
           ref={letterRef}
           className="absolute flex items-center justify-center"
@@ -95,23 +101,33 @@ export function CardOpenScene({ onComplete }: CardOpenSceneProps) {
           }}
         >
           <div className="text-center" style={{ padding: "clamp(12px, 4vmin, 40px)" }}>
-            <h2 style={{ fontSize: "clamp(24px, 6vmin, 56px)", fontWeight: 700, color: "#e8536a", marginBottom: "clamp(8px, 2vmin, 24px)" }}>
+            <h2
+              style={{
+                fontSize: "clamp(24px, 6vmin, 56px)",
+                fontWeight: 700,
+                color: "#e8536a",
+                marginBottom: "clamp(8px, 2vmin, 24px)",
+              }}
+            >
               To My Love
             </h2>
-            <p style={{ fontSize: "clamp(12px, 3vmin, 24px)", color: "#666", lineHeight: 1.8, marginBottom: "clamp(8px, 2vmin, 24px)" }}>
-              Every moment with you is a treasure.<br />
+            <p
+              style={{
+                fontSize: "clamp(12px, 3vmin, 24px)",
+                color: "#666",
+                lineHeight: 1.8,
+                marginBottom: "clamp(8px, 2vmin, 24px)",
+              }}
+            >
+              Every moment with you is a treasure.
+              <br />
               Thank you for being my everything.
             </p>
-            <span style={{ fontSize: "clamp(28px, 8vmin, 64px)" }}>💕</span>
+            <span style={{ fontSize: "clamp(28px, 8vmin, 64px)" }}>&hearts;</span>
           </div>
         </div>
 
-        {/* Envelope body */}
-        <div
-          className="absolute inset-0"
-          style={{ zIndex: 2 }}
-        >
-          {/* Envelope back wall */}
+        <div className="absolute inset-0" style={{ zIndex: 2 }}>
           <div
             className="absolute inset-0"
             style={{
@@ -120,7 +136,6 @@ export function CardOpenScene({ onComplete }: CardOpenSceneProps) {
             }}
           />
 
-          {/* Envelope front - the V fold */}
           <div
             className="absolute inset-0"
             style={{
@@ -136,7 +151,6 @@ export function CardOpenScene({ onComplete }: CardOpenSceneProps) {
             }}
           />
 
-          {/* Envelope bottom pocket */}
           <div
             className="absolute bottom-0 left-0 right-0"
             style={{
@@ -149,47 +163,53 @@ export function CardOpenScene({ onComplete }: CardOpenSceneProps) {
           />
         </div>
 
-        {/* Envelope flap (triangle on top) */}
         <div
-          ref={flapRef}
           className="absolute"
           style={{
             top: 0,
             left: 0,
             right: 0,
             height: "55%",
-            transformOrigin: "50% 0%",
-            transformStyle: "preserve-3d",
-            willChange: "transform",
             zIndex: 4,
+            pointerEvents: "none",
+            transformStyle: "preserve-3d",
           }}
         >
-          {/* Front of flap */}
           <div
+            ref={flapPanelRef}
             style={{
               position: "absolute",
               inset: 0,
-              background: "linear-gradient(to bottom, #bf3f4f, #d14b5a)",
-              clipPath: "polygon(0 0, 50% 100%, 100% 0)",
-              backfaceVisibility: "hidden",
-              borderRadius: "12px 12px 0 0",
+              transformOrigin: "50% 0%",
+              transformStyle: "preserve-3d",
+              willChange: "transform",
             }}
-          />
-          {/* Back of flap - lighter color to show it's the inside */}
-          <div
-            style={{
-              position: "absolute",
-              inset: 0,
-              background: "linear-gradient(to bottom, #f8c8cf, #f3b9c2)",
-              clipPath: "polygon(0 0, 50% 100%, 100% 0)",
-              transform: "rotateX(180deg) translateZ(0.1px)",
-              backfaceVisibility: "hidden",
-              borderRadius: "12px 12px 0 0",
-            }}
-          />
+          >
+            <div
+              style={{
+                position: "absolute",
+                inset: 0,
+                background: "linear-gradient(to bottom, #bf3f4f, #d14b5a)",
+                clipPath: "polygon(0 0, 50% 100%, 100% 0)",
+                backfaceVisibility: "hidden",
+                borderRadius: "12px 12px 0 0",
+              }}
+            />
+
+            <div
+              style={{
+                position: "absolute",
+                inset: 0,
+                background: "linear-gradient(to bottom, #f8c8cf, #f3b9c2)",
+                clipPath: "polygon(0 100%, 50% 0%, 100% 100%)",
+                transform: "rotateX(180deg)",
+                backfaceVisibility: "hidden",
+                borderRadius: "0 0 12px 12px",
+              }}
+            />
+          </div>
         </div>
 
-        {/* Shadow beneath the envelope */}
         <div
           className="absolute"
           style={{
@@ -205,8 +225,4 @@ export function CardOpenScene({ onComplete }: CardOpenSceneProps) {
     </div>
   );
 }
-
-
-
-
 
