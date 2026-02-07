@@ -9,11 +9,17 @@ interface CardOpenSceneProps {
 
 export function CardOpenScene({ onComplete }: CardOpenSceneProps) {
   const [isOpening, setIsOpening] = useState(false);
+  const [canContinue, setCanContinue] = useState(false);
   const flapPanelRef = useRef<HTMLDivElement>(null);
   const letterRef = useRef<HTMLDivElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
   const handleClick = () => {
+    if (canContinue) {
+      onComplete();
+      return;
+    }
+
     if (isOpening) return;
     setIsOpening(true);
 
@@ -29,7 +35,7 @@ export function CardOpenScene({ onComplete }: CardOpenSceneProps) {
 
     const tl = gsap.timeline({
       onComplete: () => {
-        setTimeout(onComplete, 1000);
+        setCanContinue(true);
       },
     });
 
@@ -51,15 +57,6 @@ export function CardOpenScene({ onComplete }: CardOpenSceneProps) {
           ease: "power3.out",
         },
         "+=0.2"
-      )
-      // 3. Fade scene out.
-      .to(
-        wrapperRef.current,
-        {
-          opacity: 0,
-          duration: 1,
-        },
-        "+=1"
       );
   };
 
@@ -69,7 +66,7 @@ export function CardOpenScene({ onComplete }: CardOpenSceneProps) {
       style={{ background: "#fce4ec" }}
       role="button"
       tabIndex={0}
-      aria-label="Open envelope"
+      aria-label={canContinue ? "Continue to next scene" : "Open envelope"}
       onClick={handleClick}
     >
       <div
@@ -83,6 +80,15 @@ export function CardOpenScene({ onComplete }: CardOpenSceneProps) {
             style={{ color: "#c94050", fontSize: "clamp(18px, 4vmin, 32px)", fontWeight: 600 }}
           >
             Click to open
+          </p>
+        )}
+
+        {canContinue && (
+          <p
+            className="absolute -bottom-16 left-0 right-0 text-center animate-pulse"
+            style={{ color: "#b23646", fontSize: "clamp(18px, 4vmin, 32px)", fontWeight: 700 }}
+          >
+            Click to continue
           </p>
         )}
 
@@ -200,7 +206,7 @@ export function CardOpenScene({ onComplete }: CardOpenSceneProps) {
               style={{
                 position: "absolute",
                 inset: 0,
-                background: "linear-gradient(to bottom, #f8c8cf, #f3b9c2)",
+                background: "linear-gradient(to bottom, #e4aab4, #d996a2)",
                 clipPath: "polygon(0 100%, 50% 0%, 100% 100%)",
                 transform: "rotateX(180deg)",
                 backfaceVisibility: "hidden",
@@ -225,4 +231,3 @@ export function CardOpenScene({ onComplete }: CardOpenSceneProps) {
     </div>
   );
 }
-
