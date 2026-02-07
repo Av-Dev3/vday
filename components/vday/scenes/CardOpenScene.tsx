@@ -18,6 +18,10 @@ export function CardOpenScene({ onComplete }: CardOpenSceneProps) {
     setIsOpening(true);
     if (flapRef.current) {
       gsap.set(flapRef.current, {
+        rotationX: 0,
+        y: 0,
+        yPercent: 0,
+        z: 0,
         transformOrigin: "50% 0%",
         transformPerspective: 850,
         force3D: true,
@@ -30,17 +34,14 @@ export function CardOpenScene({ onComplete }: CardOpenSceneProps) {
       },
     });
 
-    // 1. Flap opens on a hinge with a small overshoot + settle
+    // 1. Flap inverts on its hinge (front face -> back face)
     tl.to(flapRef.current, {
-      rotationX: -190,
-      duration: 0.55,
-      ease: "power2.in",
-      force3D: true,
-    })
-    .to(flapRef.current, {
-      rotationX: -155,
-      duration: 0.28,
-      ease: "power2.out",
+      rotationX: 180,
+      y: 0,
+      yPercent: 0,
+      z: 0,
+      duration: 0.85,
+      ease: "power2.inOut",
       force3D: true,
     })
     // 2. Letter slides UP OUT of envelope and comes in front
@@ -49,7 +50,7 @@ export function CardOpenScene({ onComplete }: CardOpenSceneProps) {
       zIndex: 10,
       duration: 1.4,
       ease: "power3.out",
-    }, "+=0.12")
+    }, "+=0.2")
     // 3. Fade everything out
     .to(wrapperRef.current, {
       opacity: 0,
@@ -168,7 +169,7 @@ export function CardOpenScene({ onComplete }: CardOpenSceneProps) {
             style={{
               position: "absolute",
               inset: 0,
-              background: "linear-gradient(to bottom, #c84555, #d4505e)",
+              background: "linear-gradient(to bottom, #bf3f4f, #d14b5a)",
               clipPath: "polygon(0 0, 50% 100%, 100% 0)",
               backfaceVisibility: "hidden",
               borderRadius: "12px 12px 0 0",
@@ -179,9 +180,9 @@ export function CardOpenScene({ onComplete }: CardOpenSceneProps) {
             style={{
               position: "absolute",
               inset: 0,
-              background: "linear-gradient(to bottom, #d95560, #e8646f)",
+              background: "linear-gradient(to bottom, #f8c8cf, #f3b9c2)",
               clipPath: "polygon(0 0, 50% 100%, 100% 0)",
-              transform: "rotateX(180deg)",
+              transform: "rotateX(180deg) translateZ(0.1px)",
               backfaceVisibility: "hidden",
               borderRadius: "12px 12px 0 0",
             }}
@@ -204,6 +205,7 @@ export function CardOpenScene({ onComplete }: CardOpenSceneProps) {
     </div>
   );
 }
+
 
 
 
