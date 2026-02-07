@@ -19,7 +19,7 @@ export function CardOpenScene({ onComplete }: CardOpenSceneProps) {
     if (flapRef.current) {
       gsap.set(flapRef.current, {
         transformOrigin: "50% 0%",
-        transformPerspective: 1400,
+        transformPerspective: 850,
         force3D: true,
       });
     }
@@ -30,11 +30,17 @@ export function CardOpenScene({ onComplete }: CardOpenSceneProps) {
       },
     });
 
-    // 1. Flap flips open (inverts like real envelope)
+    // 1. Flap opens on a hinge with a small overshoot + settle
     tl.to(flapRef.current, {
-      rotationX: -165,
-      duration: 0.9,
-      ease: "power2.inOut",
+      rotationX: -190,
+      duration: 0.55,
+      ease: "power2.in",
+      force3D: true,
+    })
+    .to(flapRef.current, {
+      rotationX: -155,
+      duration: 0.28,
+      ease: "power2.out",
       force3D: true,
     })
     // 2. Letter slides UP OUT of envelope and comes in front
@@ -43,7 +49,7 @@ export function CardOpenScene({ onComplete }: CardOpenSceneProps) {
       zIndex: 10,
       duration: 1.4,
       ease: "power3.out",
-    }, "+=0.05")
+    }, "+=0.12")
     // 3. Fade everything out
     .to(wrapperRef.current, {
       opacity: 0,
@@ -60,7 +66,7 @@ export function CardOpenScene({ onComplete }: CardOpenSceneProps) {
       aria-label="Open envelope"
       onClick={handleClick}
     >
-      <div ref={wrapperRef} className="relative pointer-events-none" style={{ width: "80vmin", height: "50vmin", perspective: "1400px", transformStyle: "preserve-3d" }}>
+      <div ref={wrapperRef} className="relative pointer-events-none" style={{ width: "80vmin", height: "50vmin", perspective: "850px", transformStyle: "preserve-3d" }}>
 
         {/* Click to open label */}
         {!isOpening && (
@@ -151,8 +157,9 @@ export function CardOpenScene({ onComplete }: CardOpenSceneProps) {
             left: 0,
             right: 0,
             height: "55%",
-            transformOrigin: "top center",
+            transformOrigin: "50% 0%",
             transformStyle: "preserve-3d",
+            willChange: "transform",
             zIndex: 4,
           }}
         >
@@ -197,6 +204,7 @@ export function CardOpenScene({ onComplete }: CardOpenSceneProps) {
     </div>
   );
 }
+
 
 
 
