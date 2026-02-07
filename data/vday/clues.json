@@ -1,0 +1,38 @@
+[
+  {
+    "id": "tear1",
+    "word": "LOVE",
+    "type": "tear",
+    "content": "/vday/photos/1.jpg"
+  },
+  {
+    "id": "tear2",
+    "word": "YOU",
+    "type": "tear",
+    "content": "Remember when we danced in the rain? That was magic. 💕"
+  },
+  {
+    "id": "pocket1",
+    "word": "FOR",
+    "type": "pocket",
+    "content": "The way you laugh at my silly jokes makes my heart sing."
+  },
+  {
+    "id": "pocket2",
+    "word": "EVER",
+    "type": "pocket",
+    "content": "Our late-night talks are my favorite moments."
+  },
+  {
+    "id": "flip1",
+    "word": "AND",
+    "type": "flip",
+    "content": "/vday/photos/2.jpg"
+  },
+  {
+    "id": "flip2",
+    "word": "ALWAYS",
+    "type": "flip",
+    "content": "/vday/photos/3.jpg"
+  }
+]

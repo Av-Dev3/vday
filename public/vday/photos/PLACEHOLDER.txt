@@ -1,0 +1,19 @@
+Add your photos here!
+
+Name them: 1.jpg, 2.jpg, 3.jpg, etc.
+
+Then update: data/vday/photos.ts
+
+Example:
+export const photos = [
+  "/vday/photos/1.jpg",
+  "/vday/photos/2.jpg",
+  "/vday/photos/3.jpg",
+  "/vday/photos/4.jpg",
+];
+
+Recommended:
+- At least 6-8 photos
+- Good mix of portraits and candid shots
+- High quality images (but will be optimized for web)
+- Any aspect ratio works (will be cropped to fit)

@@ -1,0 +1,18 @@
+# This directory should contain your Valentine's Day assets
+
+## Required files:
+- intro.mp4 - Your intro video
+- song.mp3 - Your background music
+- photos/ - Directory with your photos (1.jpg, 2.jpg, etc.)
+
+## Create the structure:
+```
+public/vday/
+├── intro.mp4
+├── song.mp3
+└── photos/
+    ├── 1.jpg
+    ├── 2.jpg
+    ├── 3.jpg
+    └── ...
+```
